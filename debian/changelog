@@ -1,3 +1,9 @@
+pam (1.4.0deepin) unstable; urgency=medium
+
+  * Regulate version name
+
+ -- Yutao Meng <mengyutao@uniontech.com>  Mon, 20 Mar 2023 11:33:51 +0800
+
 pam (1.4.0-deepin) stable; urgency=medium
 
   * ['Rebuild  against by  current gcc 11.2']
