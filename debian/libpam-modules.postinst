@@ -25,4 +25,13 @@ then
 	sed -i -e'/pam_unix/ s/\bmin=/minlen=/' /etc/pam.d/common-password
 fi
 
+if [ "$1" = "configure" ]
+then
+	debsystemctl=$(command -v deb-systemd-invoke || echo systemctl)
+
+	if [ "$($debsystemctl is-active deepin-authenticate)" = "active" ]; then
+		$debsystemctl restart deepin-authenticate >/dev/null || true
+	fi
+fi
+
 #DEBHELPER#

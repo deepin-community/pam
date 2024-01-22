@@ -1,3 +1,9 @@
+pam (1.4.0-14deepin2) unstable; urgency=medium
+
+  * restart deepin-authenticate service after upgrade pam
+
+ -- dengbo <dengbo@deepin.org>  Mon, 22 Jan 2024 16:41:31 +0800
+
 pam (1.4.0-14deepin1) unstable; urgency=medium
 
   * bugfix for translate for "current password: " message.
