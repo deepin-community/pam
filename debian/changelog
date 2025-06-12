@@ -1,3 +1,9 @@
+pam (1.5.3-9deepin3) unstable; urgency=medium
+
+  * feat: usec: 等保4 add pam_usec.
+
+ -- zhangya <zhangya@uniontech.com> Thu, 12 Jun 2025 16:46:07 -0600
+
 pam (1.5.3-9deepin2) unstable; urgency=medium
 
   * removed deepin_security_verify pam module if invoke hook scripts.
