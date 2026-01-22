@@ -24,3 +24,4 @@ ftbfs-implicit-function-declaration
 010_uos-pam_limits-use-systemd-logind
 0001-CVE-2024-10963.patch
 0001-CVE-2024-10041.patch
+support-sm3-hash-algorithm.patch

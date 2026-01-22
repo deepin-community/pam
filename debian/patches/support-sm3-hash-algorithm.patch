@@ -1,0 +1,76 @@
+Add support for SM3 hash algorithm for password hashing.
+
+This patch adds SM3 (ShangMi 3) hash algorithm support to pam_unix module,
+which is a Chinese cryptographic hash standard.
+
+Index: pam/modules/pam_unix/passverify.c
+===================================================================
+--- pam.orig/modules/pam_unix/passverify.c
++++ pam/modules/pam_unix/passverify.c
+@@ -446,6 +446,8 @@ PAMH_ARG_DECL(char * create_password_has
+ 		algoid = "$5$";
+ 	} else if (on(UNIX_SHA512_PASS, ctrl)) {
+ 		algoid = "$6$";
++	} else if (on(UNIX_SM3_PASS, ctrl)) {
++		algoid = "$sm3$";
+ 	} else { /* must be crypt/bigcrypt */
+ 		char tmppass[9];
+ 		char *hashed;
+@@ -493,7 +495,8 @@ PAMH_ARG_DECL(char * create_password_has
+ 			   on(UNIX_GOST_YESCRYPT_PASS, ctrl) ? "gost_yescrypt" :
+ 			   on(UNIX_BLOWFISH_PASS, ctrl) ? "blowfish" :
+ 			   on(UNIX_SHA256_PASS, ctrl) ? "sha256" :
+-			   on(UNIX_SHA512_PASS, ctrl) ? "sha512" : algoid);
++			   on(UNIX_SHA512_PASS, ctrl) ? "sha512" :
++			   on(UNIX_SM3_PASS, ctrl) ? "sm3" : algoid);
+ 		if(sp) {
+ 		   pam_overwrite_string(sp);
+ 		}
+Index: pam/modules/pam_unix/support.c
+===================================================================
+--- pam.orig/modules/pam_unix/support.c
++++ pam/modules/pam_unix/support.c
+@@ -99,7 +99,7 @@ unsigned long long _set_ctrl(pam_handle_
+ 	  free (val);
+ 
+ 	  /* read number of rounds for crypt algo */
+-	  if (rounds && (on(UNIX_SHA256_PASS, ctrl) || on(UNIX_SHA512_PASS, ctrl))) {
++	  if (rounds && (on(UNIX_SHA256_PASS, ctrl) || on(UNIX_SHA512_PASS, ctrl) || on(UNIX_SM3_PASS, ctrl))) {
+ 	    val = pam_modutil_search_key(pamh, LOGIN_DEFS, "SHA_CRYPT_MAX_ROUNDS");
+ 
+ 	    if (val) {
+@@ -194,7 +194,7 @@ unsigned long long _set_ctrl(pam_handle_
+ 		} else if (on(UNIX_BLOWFISH_PASS, ctrl)) {
+ 			if (*rounds < 4 || *rounds > 31)
+ 				*rounds = 5;
+-		} else if (on(UNIX_SHA256_PASS, ctrl) || on(UNIX_SHA512_PASS, ctrl)) {
++		} else if (on(UNIX_SHA256_PASS, ctrl) || on(UNIX_SHA512_PASS, ctrl) || on(UNIX_SM3_PASS, ctrl)) {
+ 			if ((*rounds < 1000) || (*rounds == INT_MAX)) {
+ 				/* don't care about bogus values */
+ 				*rounds = 0;
+Index: pam/modules/pam_unix/support.h
+===================================================================
+--- pam.orig/modules/pam_unix/support.h
++++ pam/modules/pam_unix/support.h
+@@ -104,10 +104,11 @@ typedef struct {
+ #define UNIX_NULLRESETOK         33     /* allow empty password if password reset is enforced */
+ #define UNIX_OBSCURE_CHECKS      34	/* enable obscure checks on passwords */
+ #define UNIX_NULLOK_SECURE       35	/* deprecated alias for nullok */
++#define UNIX_SM3_PASS            36     /* new password hashes will use SM3 */
+ /* -------------- */
+-#define UNIX_CTRLS_              36	/* number of ctrl arguments defined */
++#define UNIX_CTRLS_              37	/* number of ctrl arguments defined */
+ 
+-#define UNIX_DES_CRYPT(ctrl)	(off(UNIX_MD5_PASS,ctrl)&&off(UNIX_BIGCRYPT,ctrl)&&off(UNIX_SHA256_PASS,ctrl)&&off(UNIX_SHA512_PASS,ctrl)&&off(UNIX_BLOWFISH_PASS,ctrl)&&off(UNIX_GOST_YESCRYPT_PASS,ctrl)&&off(UNIX_YESCRYPT_PASS,ctrl))
++#define UNIX_DES_CRYPT(ctrl)	(off(UNIX_MD5_PASS,ctrl)&&off(UNIX_BIGCRYPT,ctrl)&&off(UNIX_SHA256_PASS,ctrl)&&off(UNIX_SHA512_PASS,ctrl)&&off(UNIX_BLOWFISH_PASS,ctrl)&&off(UNIX_GOST_YESCRYPT_PASS,ctrl)&&off(UNIX_YESCRYPT_PASS,ctrl)&&off(UNIX_SM3_PASS,ctrl))
+ 
+ static const UNIX_Ctrls unix_args[UNIX_CTRLS_] =
+ {
+@@ -150,6 +151,7 @@ static const UNIX_Ctrls unix_args[UNIX_C
+ /* UNIX_NULLRESETOK */         {"nullresetok",      _ALL_ON_,                  0x80000000, 0},
+ /* UNIX_OBSCURE_CHECKS */      {"obscure",          _ALL_ON_,                 0x100000000, 0},
+ /* UNIX_NULLOK_SECURE */       {"nullok_secure",    _ALL_ON_^(0x200ULL),                0, 0},
++/* UNIX_SM3_PASS */            {"sm3",              _ALL_ON_^(0x6EC22000ULL),  0x200000000, 1},
+ };
+ 
+ #define UNIX_DEFAULTS  (unix_args[UNIX__NONULL].flag)

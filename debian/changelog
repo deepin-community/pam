@@ -1,3 +1,9 @@
+pam (1.5.3-9deepin7) unstable; urgency=medium
+
+  * support sm3 hash algorithm 
+
+ -- Liang Bo <liangbo@uniontech.com>  Thu, 22 Jan 2026 15:34:08 +0800
+
 pam (1.5.3-9deepin6) unstable; urgency=medium
 
   * fix CVE-2024-10963 CVE-2024-10041 
