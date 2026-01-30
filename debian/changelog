@@ -1,3 +1,9 @@
+pam (1.5.3-9deepin8) unstable; urgency=medium
+
+  * set default cipher sm3crypt in common-password
+
+ -- Liang Bo <liangbo@uniontech.com>  Fri, 30 Jan 2026 16:56:31 +0800
+
 pam (1.5.3-9deepin7) unstable; urgency=medium
 
   * support sm3 hash algorithm 
