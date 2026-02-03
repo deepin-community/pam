@@ -1,0 +1,37 @@
+Description: pam_namespace: fix privilege escalation via symlink attacks (CVE-2025-6020)
+ The protect_dir() function in pam_namespace may access user-controlled paths
+ without proper O_NOFOLLOW protection, allowing local users to elevate their
+ privileges via symlink attacks. This minimal backport improves the logic for
+ detecting when to enable O_NOFOLLOW protection and validates that only
+ root-owned directories without loose permissions can be followed.
+ .
+ The vulnerability occurs because the function may follow symlinks when
+ traversing paths that contain user-controlled components. The fix improves
+ the validation logic to ensure we only follow symlinks in directories that
+ are owned by root and not group-writable or world-writable.
+ .
+ This is a minimal backport fix for PAM 1.5.3, adapted from the more comprehensive
+ rewrite in PAM 1.7.1.
+Author: Olivier Bal-Petre <olivier.bal-petre@ssi.gouv.fr>
+Origin: upstream, https://github.com/linux-pam/linux-pam/releases/tag/v1.7.1
+Bug: https://github.com/linux-pam/linux-pam/security/advisories/GHSA-f9p8-gjr4-j9gx
+Bug-Debian: https://security-tracker.debian.org/tracker/CVE-2025-6020
+Forwarded: not-needed
+Last-Update: 2025-02-03
+
+---
+ modules/pam_namespace/pam_namespace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/modules/pam_namespace/pam_namespace.c
++++ b/modules/pam_namespace/pam_namespace.c
+@@ -1232,7 +1232,8 @@ static int protect_dir(const char *path,
+ 			if (protect_mount(dfd, p, idata) == -1)
+ 				goto error;
+ 		} else if (st.st_uid != 0 || st.st_gid != 0 ||
+-			(st.st_mode & S_IWOTH)) {
++			(st.st_mode & S_IWOTH) ||
++			(st.st_gid != 0 && (st.st_mode & S_IWGRP))) {
+ 			/* do not follow symlinks on subdirectories */
+ 			flags |= O_NOFOLLOW;
+ 		}
