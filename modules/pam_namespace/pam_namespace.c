@@ -1229,8 +1229,8 @@ static int protect_dir(const char *path, mode_t mode, int do_mkdir,
 			/* we are inside user-owned dir - protect */
 			if (protect_mount(dfd, p, idata) == -1)
 				goto error;
-		} else if (st.st_uid != 0 || st.st_gid != 0 ||
-			(st.st_mode & S_IWOTH)) {
+		} else if (st.st_uid != 0 ||
+			(st.st_mode & (S_IWGRP|S_IWOTH))) {
 			/* do not follow symlinks on subdirectories */
 			flags |= O_NOFOLLOW;
 		}
