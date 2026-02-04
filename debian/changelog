@@ -1,3 +1,18 @@
+pam (1.5.3-9deepin9) unstable; urgency=medium
+
+  * fix CVE-2025-6020 - pam_namespace privilege escalation via symlink
+    attacks  Backport of upstream commit 976c2007 for PAM 1.7.1: Remove
+    unnecessary group ownership check and simplify directory permission
+    validation to prevent symlink attacks.  Changed from:   st.st_uid !=
+    0 || st.st_gid != 0 || (st.st_mode & S_IWOTH) To:   st.st_uid != 0
+    || (st.st_mode & (S_IWGRP|S_IWOTH))  References:   -
+    https://github.com/linux-pam/linux-pam/security/advisories/GHSA-f9p8-
+    gjr4-j9gx   - https://github.com/linux-pam/linux-
+    pam/commit/976c20079358d133514568fc7fd95c02df8b5773   -
+    https://security-tracker.debian.org/tracker/CVE-2025-6020
+
+ -- hudeng <hudeng@deepin.org>  Wed, 04 Feb 2026 11:17:44 +0800
+
 pam (1.5.3-9deepin8) unstable; urgency=medium
 
   * set default cipher sm3crypt in common-password
