@@ -25,3 +25,4 @@ ftbfs-implicit-function-declaration
 0001-CVE-2024-10963.patch
 0001-CVE-2024-10041.patch
 support-sm3-hash-algorithm.patch
+0001-CVE-2025-8941.patch
