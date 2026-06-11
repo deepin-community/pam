@@ -1,3 +1,13 @@
+pam (1.5.3-9deepin9) unstable; urgency=medium
+
+  * Fix CVE-2025-8941: potential privilege escalation in pam_namespace
+    Backport upstream commit 475bd60c552b from linux-pam/linux-pam.git.
+    Converts protect_dir() and protect_mount() to operate on file
+    descriptors instead of absolute paths to protect against race
+    conditions globally.  Co-authored-by: hudeng <hudeng@deepin.org>
+
+ -- 胡登 <packages@deepin.org>  Thu, 11 Jun 2026 21:43:31 +0800
+
 pam (1.5.3-9deepin8) unstable; urgency=medium
 
   * set default cipher sm3crypt in common-password
