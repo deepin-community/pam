@@ -1,3 +1,13 @@
+pam (1.5.3-9deepin9) unstable; urgency=medium
+
+  * CVE-2025-8941: Fix potential privilege escalation in pam_namespace
+    Backport upstream commit 475bd60c552b98c7eddb3270b0b4196847c0072e to
+    fix a TOCTOU race condition in pam_namespace that could allow users
+    with out-of-mount-namespace access to elevate privileges.  Co-
+    Authored-By: hudeng <hudeng@deepin.org>
+
+ -- deepin-ci-robot <packages@deepin.org>  Thu, 11 Jun 2026 22:43:49 +0800
+
 pam (1.5.3-9deepin8) unstable; urgency=medium
 
   * set default cipher sm3crypt in common-password
