@@ -1,3 +1,9 @@
+pam (1.5.3-9deepin9) unstable; urgency=medium
+
+  * Rebuild with LTO enabled (dpkg vendor feature optimize/lto).
+
+ -- tunaichao <tunaichao@uniontech.com>  Thu, 10 Sep 2026 19:59:25 +0800
+
 pam (1.5.3-9deepin8) unstable; urgency=medium
 
   * set default cipher sm3crypt in common-password
